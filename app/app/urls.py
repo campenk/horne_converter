@@ -18,8 +18,9 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
-
-    path('', views.index),
-
+   path('<int:list_id>/', views.list_detail, name='list_detail'),
+    path('<int:book_id>/', views.book_detail, name='book_detail'),
+    path('<int:author_id>/', views.author_detail, name='author_detail'),
+    path('<int:genre_id>/', views.genre_detail, name='genre_detail'),
     path('admin/', admin.site.urls),
 ]
