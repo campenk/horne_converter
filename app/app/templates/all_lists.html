@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All lists</title>
+</head>
+<body>
+{% if all_lists %}
+    <ul>
+    {% for list in all_lists %}
+        <li><a href="{% url 'list_detail' list.id %}">{{ list.list_title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No lists are available.</p>
+{% endif %}
+</body>
+</html>
