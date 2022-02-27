@@ -2,9 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Book detail</title>
 </head>
 <body>
 
+{% if book_detail %}
+    <h1> {{ Book.title }}</h1>
+    <h2>by {{ Book.full_name }}</h2> <br>
+        Genre {{ book.genre }}<br>
+        Good Reads Rating {{ book.goodreads_rating }} <br>
+        Read Status {{ book.read_status }}<br>
+        Library availability {{ book.library_availability }} <br>
+        ISBN: {{ isbn }} <br>
+
+
+
+
+
+
+
+
+{% else %}
+    <p>List does not exist</p>
+{% endif %}
 </body>
 </html>

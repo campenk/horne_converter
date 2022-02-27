@@ -40,28 +40,28 @@ def list_detail(request, list_id):
         }
     )
 
-"""
-def book_detail(request, book_id):
-    
-    try:
 
+def book_detail(request, book_id):
         book_detail = (
             Book.objects
-            .filter(book_id=book_id)
+            .filter(pk=book_id)
             .select_related('author')
             .select_related('genre')
-            .annotate(full_name=Concat(F('author__last_name'), Value(', '), F('author__first_name'),
-                                           F('author__middle_name')))
+            .annotate(full_name=Concat(F('author__last_name'), Value(', '), F('author__first_name'), Value(', '),
+                                       F('author__middle_name')))
         )
-    except Book.DoesNotExist:
-        raise Http404
-    return render(request, 'book_detail', {'book_detail': book_detail})
 
-"""
+        # you will never hit this because you are doing a filter above, not a get.
+        # instead you want to remove the try/except block and add .first() to your query.
+        # then you can check if book_detail is None or not, and raise if it is None.
 
-class DetailView(generic.DetailView):
-    model = Book
-    template_name = book_detail.html
+        return render(
+            request,
+            'book_detail.html',
+            context={
+                'book_detail': book_detail
+            }
+        )
 
 
 def author_detail(request, author_id):
