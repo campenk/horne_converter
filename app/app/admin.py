@@ -1,10 +1,9 @@
 from django.contrib import admin
-from .models import Genre, Author, Book, List
+from .models import Item, ItemCategory, MeasurementType
 
 # Register your models here.
-admin.site.register(Genre)
-admin.site.register(Author)
-admin.site.register(Book)
-admin.site.register(List)
+admin.site.register(Item)
+admin.site.register(ItemCategory)
+admin.site.register(MeasurementType)
 
 

@@ -15,16 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import DetailView
-from . import views
+from .import views
 
 urlpatterns = [
-    # List views - CRUD
-    path('', views.all_lists, name='all_lists'),
-
-    path('list/<int:list_id>/', views.list_detail, name='list_detail'),
-    path('book/<int:book_id>/', views.book_detail, name='book_detail'),
-    path('author/<int:author_id>/', views.author_detail, name='author_detail'),
-    path('genre/<int:genre_id>/', views.genre_detail, name='genre_detail'),
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
 ]

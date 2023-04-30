@@ -1,0 +1,16 @@
+Installation
+Install Django for each project
+python.exe -m pip install --upgrade pip –user
+Install virtual environment for new project
+pip install virtualenv –user
+
+Go to project directory
+Create new virtual environment
+python -m virtualenv venv
+Activate virtual environment
+.\venv\Scripts\activate
+Install Django
+pip install Django
+
+Interactive API
+python manage.py shell
