@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <title>The Horne Measurement System</title>
+    </head>
+    <body class="">
+        <div class="">
+            <div class="w-full h-20 flex justify-center m-4 text-2xl bg-black text-white">
+                The Horne Measurement System
+            </div>
+            <form class="w-full">
+                <div class="w-full flex justify-center">
+                    <div class="w-1/3">
+                        <label for="user-entry" class="w-full">Enter number to be converted</label>
+                    </div>
+                    <div class="w-1/3 border border-rose-600">
+                        <input class="w-full border-2 border-rose-600 " type="number" id="user-entry" >
+                    </div>
+                    <div class="w-1/3">
+                        <select class="w-full" id="unit" name="unit">
+                        <option name="centimeters">centimeters</option>
+                        <option name="meters">meters</option>
+                        <option name="inches">inches</option>
+                        <option name="kilograms">kilograms</option>
+                        <option name="grams">grams</option>
+                        <option name="pounds">pounds</option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div>
+                    <label for="output-options">
+                    Output options
+                    </label>
+                    <select name="output-options" id="output-options">
+                        <option name="animals">
+                            animals
+                        </option>
+                        <option name="vegetables">
+                            vegetables
+                        </option>
+                        <option name="people">
+                            people
+                        </option>
+                        <option name="fruit">
+                            fruit
+                        </option>
+                    </select>
+                    <button>Random</button>
+                </div>
+                <div>
+                    <button type="button">Convert</button>
+                </div>
+        
+            </form>
+        
+            {% if latest_question_list %}
+                <ul>
+                {% for question in latest_question_list %}
+                    <li><a href="/polls/{{ question.id }}/">{{ question }}</a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No polls are available.</p>
+            {% endif %}
+        </div>  
+  </body>
+</html>
+
+
