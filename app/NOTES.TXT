@@ -1,0 +1,12 @@
+MVP
+
+
+
+
+NICE TO HAVE
+    Return x copies of to scale image
+    Add your own measurements
+    Search for measurements
+
+
+WORKFLOW

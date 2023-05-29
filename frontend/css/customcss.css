@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap");
+@font-face {
+  font-family: "Veteran Typewriter";
+  src: url("../fonts/veteran typewriter.ttf");
+}
 
 .test {
     background-color: red;
