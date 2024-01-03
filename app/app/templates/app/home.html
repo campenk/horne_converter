@@ -13,65 +13,69 @@
             <div class="w-full h-20 flex justify-center mt-24 mb-12 text-4xl uppercase text-black">
                 The Horne Measurement System
             </div>
-            <form>
+
+            <form action="" method="post" class="w-6/12">
+
+                {% csrf_token %}
+
+                <div class="w-full flex justify-between items-center mb-12">
+                    <div class="w-full mr-4">
+                        <input id="{{ form.user_entry.html_name }}" name="user_entry" class="w-full bg-white border border-black p-1 pl-4" {% if form.user_entry.value %} value = "{{ form.user_entry.value }}" {% endif %}>
+                        {{ form.user_entry.errors }}
+
+
+
+                    </div>
+                    <div class="w-full ml-4 ">
+
+                        <select class="w-full bg-white border border-black p-1 pl-4" id="unit_choice" name="unit_choice">
+                            {% for option in form.unit_choice %}
+                                {% if option == unit_choice %}
+                                    {{ option.selected }}
+                                {% else %}
+                                    {{ option }}
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        {{ form.unit_choice.errors }}
+                    </div>
+                </div>
 
                 <div class="flex justify-between items-center mb-12">
-                    <div class="w-7/12 mr-4">
-                        <input class="w-full border border-black p-1 pl-4" type="number" id="user-entry" placeholder="Value to be converted">
-                    </div>
-                    <div class="w-5/12 ml-4">
-                        <select class="w-full bg-white border border-black p-1 pl-4" id="unit" name="unit">
-                            <option name="0" value="">--SELECT A UNIT--</option>
-                            <option name="1" value="" class="bg-black text-white hover:bg-black hover:text-white">---LENGTH---</option>
-<!--                            TODO: Category names should not change colour on hover-->
-                            <option name="millimetres">millimetres</option>
-                            <option name="centimetres">centimetres</option>
-                            <option name="metres">metres</option>
-                            <option name="kilometres">kilometres</option>
-                            <option name="miles">miles</option>
-                            <option name="yards">yards</option>
-                            <option name="feet">feet</option>
-                            <option name="inches">inches</option>
-                            <option name="2" value="" class="bg-black text-white">---WEIGHT---</option>
-                            <option name="kilograms">kilograms</option>
-                            <option name="grams">grams</option>
-                            <option name="milligrams">milligrams</option>
-                            <option name="pounds">pounds</option>
-                            <option name="ounces">ounces</option>
+                    {{ form.output_options.label_tag }}
+                    <div class="w-3/12">
+                        <select class="w-full bg-white border border-black p-1 pl-4" id="output_options" name="output_options">
+                            {% for option in form.output_options %}
+                                {% if option == output_options %}
+                                    {{ option.selected }}
+                                {% else %}
+                                    {{ option }}
+                                {% endif %}
+                            {% endfor %}
 
                         </select>
                     </div>
-                </div>
 
-                <div class="flex justify-between items-center mb-12">
-                    <label for="output-options" class="w-2/12">
-                    Output settings
-                    </label>
-                    <select class="w-6/12 bg-white border border-black p-1 pl-4" name="output-options" id="output-options">
-                        {% for category in categories %}
-                        <option name="{{ category.itemCategory }}">{{ category.itemCategory }}</option>
-                        {% endfor %}
+{{ form.output_options.errors }}
 
-                    </select>
-                    <div>
-                        OR
-                    </div>
-                    <div class="text-red-800">
-                        <i class="fa-solid fa-shuffle border border-red-800 rounded-full p-1"></i>
-                    </div>
+
                 </div>
                 <div class="flex justify-center w-full">
-                    <a href="" class="w-1/2 h-12 rounded-full bg-red-800 text-white text-xl">
-                        <div class="flex items-center justify-center w-full h-full text-white text-2xl uppercase">
+                    <button type="submit" class=" w-1/2 h-12 rounded-full bg-red-800 text-white text-xl uppercase">
+<!--                        <div class="flex items-center justify-center w-full h-full text-white text-2xl uppercase">-->
                             Convert
-                        </div>
-                    </a>
+    <!--                        </div>-->
+                    </button>
                 </div>
 
-        
             </form>
-        
 
+
+
+
+            {% if result %}
+                <h2>RESULT: {{ result }}</h2>
+            {% endif %}
 
 
         </main>
