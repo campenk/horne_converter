@@ -20,33 +20,33 @@
 
                 <div class="w-full flex justify-between items-center mb-12">
                     <div class="w-full mr-4">
-                        <input id="{{ form.user_entry.html_name }}" name="user_entry" class="w-full bg-white border border-black p-1 pl-4" {% if form.user_entry.value %} value = "{{ form.user_entry.value }}" {% endif %}>
-                        {{ form.user_entry.errors }}
+                        <input id="{{ form.input_value.html_name }}" name="input_value" class="w-full bg-white border border-black p-1 pl-4" {% if form.input_value.value %} value = "{{ form.input_value.value }}" {% endif %}>
+                        {{ form.input_value.errors }}
 
 
 
                     </div>
                     <div class="w-full ml-4 ">
 
-                        <select class="w-full bg-white border border-black p-1 pl-4" id="unit_choice" name="unit_choice">
-                            {% for option in form.unit_choice %}
-                                {% if option == unit_choice %}
+                        <select class="w-full bg-white border border-black p-1 pl-4" id="input_unit" name="input_unit">
+                            {% for option in form.input_unit %}
+                                {% if option == input_unit %}
                                     {{ option.selected }}
                                 {% else %}
                                     {{ option }}
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        {{ form.unit_choice.errors }}
+                        {{ form.input_unit.errors }}
                     </div>
                 </div>
 
                 <div class="flex justify-between items-center mb-12">
-                    {{ form.output_options.label_tag }}
+                    {{ form.output_category.label_tag }}
                     <div class="w-3/12">
-                        <select class="w-full bg-white border border-black p-1 pl-4" id="output_options" name="output_options">
-                            {% for option in form.output_options %}
-                                {% if option == output_options %}
+                        <select class="w-full bg-white border border-black p-1 pl-4" id="output_category" name="output_category">
+                            {% for option in form.output_category %}
+                                {% if option == output_category %}
                                     {{ option.selected }}
                                 {% else %}
                                     {{ option }}
@@ -56,7 +56,7 @@
                         </select>
                     </div>
 
-{{ form.output_options.errors }}
+{{ form.output_category.errors }}
 
 
                 </div>

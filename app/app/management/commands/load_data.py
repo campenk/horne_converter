@@ -1,4 +1,6 @@
-from app.models import Item
+from django.core.management import BaseCommand
+
+from app.models import Item, ItemCategory, MeasurementType
 
 
 class Command(BaseCommand):
@@ -55,12 +57,13 @@ class Command(BaseCommand):
         for animal in animals:
             item = Item(
                 itemName=animal['itemName'],
-                itemCategory='animal',
+                itemCategory=ItemCategory.objects.get(itemCategory="animal"),
                 itemMeasurement=animal['itemMeasurement'],
-                measurementType='length'
+                measurementType=MeasurementType.objects.get(measurementType="length")
             )
             item.save()
             self.stdout.write(f'Successfully added {animal["itemName"]} to Item class.')
 
         self.stdout.write(self.style.SUCCESS('Successfully added all animals to Item class.'))
+
 

@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 from .form import UserEntryForm
 from .models import Item, MeasurementType, ItemCategory
+import random
 
 
 # def converter(request, entry, unit, output_category):
@@ -14,11 +15,13 @@ from .models import Item, MeasurementType, ItemCategory
 
 def index(request):
 
-    categories = ItemCategory.objects.all()
     template = loader.get_template('app/home.html')
+    # categories = ItemCategory.objects.filter(itemCategory=request.POST.get('output_options'))
+    all_categories = ItemCategory.objects.all()
+
 
     context = {
-        'categories': categories,
+        'categories': all_categories,
     }
 
     if request.method == 'POST':
@@ -26,17 +29,26 @@ def index(request):
 
         context['form-valid'] = form.is_valid()
         context['data'] = request.POST.items()
-        context['user_entry'] = request.POST.get('user_entry')
-        context['unit_choice'] = request.POST.get('unit_choice')
-        context['output_options'] = request.POST.get('output_options')
+        context['input_value'] = request.POST.get('input_value')
+        context['input_unit'] = request.POST.get('input_unit')
+        context['output_category'] = request.POST.get('output_category')
 
         if form.is_valid():
-            if unit_category(context['unit_choice']) == "length":
-                context['result'] = convert_length_to_cm(context['user_entry'], context['unit_choice'])
-            elif unit_category(context['unit_choice']) == "weight":
-                context['result'] = convert_weight_to_kg(context['user_entry'], context['unit_choice'])
+            items = Item.objects.filter(itemCategory=ItemCategory.objects.get(id=context['output_category']))
+            output_unit = random.choice(items)
+            context['result'] = str(context['input_value']) + " " + context['input_unit']
 
-            context['result'] = categories
+            if unit_category(context['input_unit']) == "length":
+                standardized_value = convert_length_to_cm(context['input_value'], context['input_unit'])
+                context['standardized_value'] = standardized_value
+                output_value = round(standardized_value / output_unit.itemMeasurement,1)
+                context['result'] += " is equal to " + str(output_value) + " " + output_unit.itemName + "s"
+
+            elif unit_category(context['input_unit']) == "weight":
+                standardized_value = convert_weight_to_kg(context['input_value'], context['input_unit'])
+                context['standardized_value'] = standardized_value
+                output_value = standardized_value / output_unit.itemMeasurement
+                context['result'] += " is equal to " + str(output_value) + " " + output_unit.itemName + "s"
 
     else:
         form = UserEntryForm()

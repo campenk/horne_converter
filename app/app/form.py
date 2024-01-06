@@ -38,9 +38,9 @@ class UserEntryForm(forms.Form):
          ),
     ]
 
-    user_entry = forms.DecimalField()
-    unit_choice = forms.ChoiceField(choices=UNIT_CHOICES, label="unit")
-    output_options = forms.ModelChoiceField(ItemCategory.objects.all())
+    input_value = forms.DecimalField()
+    input_unit = forms.ChoiceField(choices=UNIT_CHOICES, label="unit")
+    output_category = forms.ModelChoiceField(ItemCategory.objects.all())
 
 
 
