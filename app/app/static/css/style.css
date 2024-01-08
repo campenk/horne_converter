@@ -566,16 +566,8 @@ video {
   width: 25%;
 }
 
-.w-4\/12 {
-  width: 33.333333%;
-}
-
 .w-6\/12 {
   width: 50%;
-}
-
-.w-8\/12 {
-  width: 66.666667%;
 }
 
 .w-full {
@@ -636,6 +628,11 @@ video {
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .text-4xl {

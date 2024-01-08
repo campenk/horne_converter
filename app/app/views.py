@@ -1,3 +1,5 @@
+import decimal
+
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render
@@ -41,13 +43,13 @@ def index(request):
             if unit_category(context['input_unit']) == "length":
                 standardized_value = convert_length_to_cm(context['input_value'], context['input_unit'])
                 context['standardized_value'] = standardized_value
-                output_value = round(standardized_value / output_unit.itemMeasurement,1)
+                output_value = round(decimal.Decimal(standardized_value) / output_unit.itemMeasurement,1)
                 context['result'] += " is equal to " + str(output_value) + " " + output_unit.itemName + "s"
 
             elif unit_category(context['input_unit']) == "weight":
                 standardized_value = convert_weight_to_kg(context['input_value'], context['input_unit'])
                 context['standardized_value'] = standardized_value
-                output_value = standardized_value / output_unit.itemMeasurement
+                output_value = round(decimal.Decimal(standardized_value) / output_unit.itemMeasurement,1)
                 context['result'] += " is equal to " + str(output_value) + " " + output_unit.itemName + "s"
 
     else:
