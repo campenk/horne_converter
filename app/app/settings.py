@@ -26,17 +26,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/\
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY', default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')  # <-- Updated!
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'horne-converter.fly.dev ']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'horne-converter.fly.dev']
 
-CSRF_TRUSTED_ORIGINS = ['https://horne-converter.fly.dev ']
+CSRF_TRUSTED_ORIGINS = ['https://horne-converter.fly.dev']
 
 
 # Application definition
@@ -89,20 +89,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # },
-    # # read os.environ['DATABASE_URL']
-    'default': env.db(),
-    # 'postgresql': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'converter',
-    #     'USER': 'postgres',
-    #     'PASSWORD': '7v2ScdoB?m',
-    #     'HOST': 'localhost',
-    #     'PORT': '5433',
-    # }
+    'default': env.db(default="sqlite:///code/db.sqlite3"),
 }
 
 # Password validation
