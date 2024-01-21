@@ -18,6 +18,7 @@ import random
 def index(request):
 
     template = loader.get_template('app/home.html')
+
     # categories = ItemCategory.objects.filter(itemCategory=request.POST.get('output_options'))
     all_categories = ItemCategory.objects.all()
 
