@@ -37,7 +37,10 @@ def index(request):
         context['output_category'] = request.POST.get('output_category')
 
         if form.is_valid():
-            items = Item.objects.filter(itemCategory=ItemCategory.objects.get(id=context['output_category']))
+            if context['output_category'] == "":
+                items = Item.objects.all()
+            else:
+                items = Item.objects.filter(itemCategory=ItemCategory.objects.get(id=context['output_category']))
             output_unit = random.choice(items)
             context['result'] = str(context['input_value']) + " " + context['input_unit']
 
@@ -109,3 +112,5 @@ def convert_weight_to_kg(user_input, unit):
             return user_input*0.453592
         case "OZ":
             return user_input*0.0283495
+
+

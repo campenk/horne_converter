@@ -9,26 +9,23 @@
         <title>The Horne Measurement System</title>
     </head>
     <body class="font-veteranTypewriter">
-        <main class="flex flex-col items-center w-full" id="user-entry-area">
-            <div class="w-full h-20 flex justify-center mt-24 mb-12 text-4xl uppercase text-black">
+        <main class="flex flex-col items-center w-screen px-4" id="user-entry-area">
+            <div class="flex justify-center mt-12 mb-12 text-xl sm:text-2xl uppercase text-black">
                 The Horne Measurement System
             </div>
 
-            <form action="" method="post" class="w-6/12">
-
+            <form action="" method="post" class="">
                 {% csrf_token %}
-
-                <div class="w-full flex justify-between items-center mb-12">
-                    <div class="w-full mr-4">
-                        <input id="{{ form.input_value.html_name }}" name="input_value" class="w-full bg-white border border-black p-1 pl-4" {% if form.input_value.value %} value = "{{ form.input_value.value }}" {% endif %}>
-                        {{ form.input_value.errors }}
-
-
+                <div class="flex w-full justify-center items-start mb-12">
+                    <div class="w-1/2 pr-2">
+                        <input id="{{ form.input_value.html_name }}" name="input_value" class="w-full h-7 bg-white border border-black p-1 text-base sm:text-lg" {% if form.input_value.value %} value = "{{ form.input_value.value }}" {% endif %}>
+                        <div class="text-xs sm:text-base">
+                            {{ form.input_value.errors }}
+                        </div>
 
                     </div>
-                    <div class="w-full ml-4 ">
-
-                        <select class="w-full bg-white border border-black p-1 pl-4" id="input_unit" name="input_unit">
+                    <div class="w-1/2 pl-2">
+                        <select class="w-full h-7 bg-white border border-black p-1 text-sm sm:text-lg" id="input_unit" name="input_unit">
                             {% for option in form.input_unit %}
                                 {% if option == input_unit %}
                                     {{ option.selected }}
@@ -37,14 +34,15 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        {{ form.input_unit.errors }}
+                        <div class="text-xs sm:text-base">
+                            {{ form.input_unit.errors }}
+                        </div>
                     </div>
                 </div>
-
-                <div class="flex justify-between items-center mb-12">
+                    <div class="flex justify-center items-start mb-12 text-sm sm:text-lg">
                     {{ form.output_category.label_tag }}
-                    <div class="w-3/12">
-                        <select class="w-full bg-white border border-black p-1 pl-4" id="output_category" name="output_category">
+                    <div class="">
+                        <select class="h-7 bg-white border border-black p-1 pl-4 ml-4 text-sm sm:text-lg" id="output_category" name="output_category">
                             {% for option in form.output_category %}
                                 {% if option == output_category %}
                                     {{ option.selected }}
@@ -52,35 +50,24 @@
                                     {{ option }}
                                 {% endif %}
                             {% endfor %}
-
                         </select>
                     </div>
+                        <div class="text-xs sm:text-base">
+                            {{ form.output_category.errors }}
 
-{{ form.output_category.errors }}
-
-
+                        </div>
                 </div>
-                <div class="flex justify-center w-full">
-                    <button type="submit" class=" w-1/2 h-12 rounded-full bg-red-800 text-white text-xl uppercase">
-<!--                        <div class="flex items-center justify-center w-full h-full text-white text-2xl uppercase">-->
+                <div class="flex justify-center mb-12">
+                    <button type="submit" class=" w-1/2 h-12 rounded-full bg-red-800 text-white text-xl sm:text-2xl uppercase">
                             Convert
-    <!--                        </div>-->
                     </button>
                 </div>
-
             </form>
-
-
-
-
             {% if result %}
-                <div class="w-full h-20 flex justify-center mt-24 mb-12 text-3xl  text-black">
-
+                <div class="flex justify-center mb-12 text-lg sm:text-2xl text-center text-black">
                 {{ result }}
                 </div>
             {% endif %}
-
-
         </main>
 
     <!-- Font Awesome javascript file -->

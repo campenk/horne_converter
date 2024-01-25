@@ -18,7 +18,7 @@ class ItemCategory(models.Model):
 class Item(models.Model):
     itemName = models.CharField(max_length=255)
     itemCategory = models.ForeignKey(ItemCategory, on_delete=models.CASCADE)
-    itemMeasurement = models.DecimalField(max_digits=19, decimal_places=10)
+    itemMeasurement = models.DecimalField(max_digits=19, decimal_places=6)
     measurementType = models.ForeignKey(MeasurementType, on_delete=models.CASCADE)
 
     def __str__(self):
