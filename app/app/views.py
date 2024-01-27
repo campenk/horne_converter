@@ -35,26 +35,47 @@ def index(request):
         context['input_value'] = request.POST.get('input_value')
         context['input_unit'] = request.POST.get('input_unit')
         context['output_category'] = request.POST.get('output_category')
+        context['modulo'] = ""
 
         if form.is_valid():
+            #  create list of items matching output category
             if context['output_category'] == "":
-                items = Item.objects.all()
+                items_in_category = Item.objects.all()
             else:
-                items = Item.objects.filter(itemCategory=ItemCategory.objects.get(id=context['output_category']))
-            output_unit = random.choice(items)
+                items_in_category = Item.objects.filter(itemCategory=ItemCategory.objects.get(id=context['output_category']))
             context['result'] = str(context['input_value']) + " " + context['input_unit']
+            items_whole_number = []
 
             if unit_category(context['input_unit']) == "length":
+                #  convert input value to standardized value
                 standardized_value = convert_length_to_cm(context['input_value'], context['input_unit'])
                 context['standardized_value'] = standardized_value
-                output_value = round(decimal.Decimal(standardized_value) / output_unit.itemMeasurement,1)
+
+                #  select items that return a whole number
+                for item in items_in_category:
+                    if round(decimal.Decimal(standardized_value) % item.itemMeasurement, 0) == 0:
+                        items_whole_number.append(item)
+
+                #  check if there are any items that return a whole number
+                if not items_whole_number:
+                    output_unit = random.choice(items_in_category)
+                    context['modulo'] += "no items return whole number"
+                else:
+                    output_unit = random.choice(items_whole_number)
+
+                context['modulo'] += " 1 unit is " + str(round(output_unit.itemMeasurement, 0)) + " and modulo " + str(round(decimal.Decimal(standardized_value) % output_unit.itemMeasurement, 0))
+                output_value = round(decimal.Decimal(standardized_value) / output_unit.itemMeasurement,0)
                 context['result'] += " is equal to " + str(output_value) + " " + output_unit.itemName + "s"
 
             elif unit_category(context['input_unit']) == "weight":
+                output_unit = random.choice(items_in_category)
+
                 standardized_value = convert_weight_to_kg(context['input_value'], context['input_unit'])
                 context['standardized_value'] = standardized_value
+                context['modulo'] += "modulo " + str(round(decimal.Decimal(standardized_value) % output_unit.itemMeasurement, 1))
                 output_value = round(decimal.Decimal(standardized_value) / output_unit.itemMeasurement,1)
                 context['result'] += " is equal to " + str(output_value) + " " + output_unit.itemName + "s"
+
 
     else:
         form = UserEntryForm()
@@ -114,3 +135,23 @@ def convert_weight_to_kg(user_input, unit):
             return user_input*0.0283495
 
 
+def item_modulo_zero(output_category, standardized_value):
+    #  TODO: Add if output is > 1
+    items_whole_number = []
+    if output_category == "":
+        items_in_category = Item.objects.all()
+
+    else:
+        items_in_category = Item.objects.filter(itemCategory=ItemCategory.objects.get(id=output_category))
+
+    for item in items_in_category:
+        if round(decimal.Decimal(standardized_value) % item.itemMeasurement, 1) != 0 and round(decimal.Decimal(standardized_value) / item.itemMeasurement, 1) > 0:
+            items_whole_number.append(item)
+
+    if not items_whole_number:
+        output_unit = random.choice(items_in_category)
+
+    else:
+        output_unit = random.choice(items_whole_number)
+
+    return output_unit
