@@ -74,25 +74,25 @@ class Command(BaseCommand):
             {'itemName': 'Adult Gorilla', 'itemMeasurement': 160000, 'itemCategory': 'Wildlife'},
             {'itemName': 'Adult Ostrich', 'itemMeasurement': 145000, 'itemCategory': 'Wildlife'},
             {'itemName': 'Adult Chimpanzee', 'itemMeasurement': 40000, 'itemCategory': 'Wildlife'},
-            {'itemName': 'Chicken Egg (average)', 'itemMeasurement': 50, 'itemCategory': 'Food'},
+            {'itemName': 'Chicken Egg', 'itemMeasurement': 50, 'itemCategory': 'Food'},
             {'itemName': 'Compact Mirror', 'itemMeasurement': 100, 'itemCategory': 'Accessories'},
             {'itemName': 'Straw Hat', 'itemMeasurement': 150, 'itemCategory': 'Clothing'},
             {'itemName': 'Small Pinecone', 'itemMeasurement': 5, 'itemCategory': 'Nature'},
-            {'itemName': 'Bottle of Water', 'itemMeasurement': 500, 'itemCategory': 'Food'},
             {'itemName': 'Adult Sperm Whale', 'itemMeasurement': 45000000, 'itemCategory': 'Wildlife'},
             {'itemName': 'Human Lung', 'itemMeasurement': 1300, 'itemCategory': 'Human'},
 
         ]
 
         for item in item_weights:
+            item_category, _ = ItemCategory.objects.get_or_create(item_category=item['itemCategory'])
             item = Item(
                 item_name=item['itemName'],
                 item_measurement=item['itemMeasurement'],
-                item_category=ItemCategory.objects.get(item_category=item['itemCategory']),
-                measurement_type= "WE"
+                item_category=item_category,
+                measurement_type="WE"
             )
             item.save()
-            # self.stdout.write(f'Successfully added {item["itemName"]} to Item class.')
+
         #  standard unit is metres
         items_lengths = [
             {'itemName': 'Salt Grain', 'itemMeasurement': 0.0005, 'itemCategory': 'Food'},
@@ -164,15 +164,15 @@ class Command(BaseCommand):
         ]
 
         for item in items_lengths:
+            item_category, _ = ItemCategory.objects.get_or_create(item_category=item['itemCategory'])
             item = Item(
                 item_name=item['itemName'],
                 item_measurement=item['itemMeasurement'],
-                item_category=ItemCategory.objects.get(item_category=item['itemCategory']),
+                item_category=item_category,
                 measurement_type= "LE"
             )
             item.save()
-            # self.stdout.write(f'Successfully added {item["itemName"]} to Item class.')
 
-        self.stdout.write(self.style.SUCCESS('Successfully added all animals to Item class.'))
+        self.stdout.write(self.style.SUCCESS('Successfully added all items to Item class.'))
 
 

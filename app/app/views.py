@@ -19,6 +19,7 @@ def index(request):
         if form.is_valid():
             #  determine measurement type
             measurement_type = _unit_category(form.cleaned_data['input_unit'])
+            print("measurement type = " + measurement_type)
 
             #  calculate standardized value
             standardized_value = _convert_to_standardized_value(form.cleaned_data['input_unit'], float(form.cleaned_data['input_value']), measurement_type)
@@ -45,7 +46,7 @@ def index(request):
                 output_value = round(output_value, 0)
 
             result = (
-                    str(form.cleaned_data['input_value']) + " " +
+                    str(_humanize_output(form.cleaned_data['input_value'])) + " " +
                     form.cleaned_data['input_unit'] + " is equal to "
                     + str(_humanize_output(output_value)) + " "
                     + output_unit.item_name + "s ")
@@ -72,6 +73,7 @@ def _convert_length_to_m(user_input: float, unit: str) -> float:
 
     for i in CONVERSION_FACTORS:
         if unit == i[0]:
+            print("length in m = " + str(user_input * i[1]))
             return user_input * i[1]
 
 
@@ -79,6 +81,7 @@ def _convert_weight_to_g(user_input: float, unit: str) -> float:
 
     for i in CONVERSION_FACTORS:
         if unit == i[0]:
+            print("weight in g = " + str(user_input * i[1]))
             return user_input * i[1]
 
 
@@ -90,13 +93,17 @@ def _convert_to_standardized_value(input_unit, input_value, unit_category):
 
 
 def _get_items_in_category(output_category, measurement_type):
+    print("output category = " + str(output_category))
+    print(Item.objects.all())
     qs = (
         Item.objects.filter(
             measurement_type=measurement_type)
     )
 
     if output_category is None:
+        print(qs)
         return qs
+
     else:
         return qs.filter(
             item_category=ItemCategory.objects.get(
