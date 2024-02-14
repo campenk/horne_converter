@@ -45,7 +45,7 @@ Alex Horne from the Taskmaster UK TV show.
     python -m pip install --upgrade humanize
     ~~~~
 
-## TODO
+[//]: # (## TODO)
 
 [//]: # (- Add instructions for setup / running including copy/pasteable commands)
 
