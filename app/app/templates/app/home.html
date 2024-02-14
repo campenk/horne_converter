@@ -6,20 +6,20 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-        <title>The Horne Measurement System</title>
+        <title>The Horne Converter</title>
     </head>
     <body class="font-veteranTypewriter">
         <main class="flex flex-col items-center w-screen px-4" id="user-entry-area">
             <div class="flex justify-center mt-12 mb-12 text-xl sm:text-2xl uppercase text-black">
-                The Horne Measurement System
+                The Horne Converter
             </div>
 
             <form action="" method="post" class="">
                 {% csrf_token %}
                 <div class="flex w-full justify-center items-start mb-12">
                     <div class="w-1/2 pr-2">
-                        <input id="{{ form.input_value.html_name }}" name="input_value" class="w-full h-7 bg-white border border-black p-1 text-base sm:text-lg" {% if form.input_value.value %} value = "{{ form.input_value.value }}" {% endif %}>
-                        <div class="text-xs sm:text-base">
+                        <input id="{{ form.input_value.html_name }}" name="input_value" placeholder="value" class="w-full h-7 bg-white border border-black p-1 text-base sm:text-lg" {% if form.input_value.value %} value = "{{ form.input_value.value }}" {% endif %}>
+                        <div class="text-xs sm:text-base text-red">
                             {{ form.input_value.errors }}
                         </div>
 
@@ -34,7 +34,7 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        <div class="text-xs sm:text-base">
+                        <div class="text-xs sm:text-base text-red">
                             {{ form.input_unit.errors }}
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                        <div class="text-xs sm:text-base">
+                        <div class="text-xs sm:text-base text-red">
                             {{ form.output_category.errors }}
 
                         </div>
@@ -68,9 +68,7 @@
                 {{ result }}
 
                 </div>
-             <div>
-                        {{ modulo }}
-                    </div>
+
 
             {% endif %}
         </main>

@@ -1,157 +1,129 @@
-import decimal
+from decimal import Decimal
 
-from django.http import HttpResponse
-from django.template import loader
-from django.shortcuts import render
+from django.template.response import TemplateResponse
 
 from .form import UserEntryForm
-from .models import Item, MeasurementType, ItemCategory
+from .models import Item, ItemCategory
 import random
-
-
-# def converter(request, entry, unit, output_category):
-#     unit_category = MeasurementType.objects.filter()
-#     a_list = Item.objects.filter()
-#     return render(request, 'news/year_archive.html', a_list)
+from .constants import WEIGHT_UNITS, LENGTH_UNITS, CONVERSION_FACTORS
+import humanize
 
 
 def index(request):
 
-    template = loader.get_template('app/home.html')
-
-    # categories = ItemCategory.objects.filter(itemCategory=request.POST.get('output_options'))
-    all_categories = ItemCategory.objects.all()
-
-
-    context = {
-        'categories': all_categories,
-    }
+    context = {}
 
     if request.method == 'POST':
         form = UserEntryForm(request.POST)
 
-        context['form-valid'] = form.is_valid()
-        context['data'] = request.POST.items()
-        context['input_value'] = request.POST.get('input_value')
-        context['input_unit'] = request.POST.get('input_unit')
-        context['output_category'] = request.POST.get('output_category')
-        context['modulo'] = ""
-
         if form.is_valid():
-            #  create list of items matching output category
-            if context['output_category'] == "":
-                items_in_category = Item.objects.all()
-            else:
-                items_in_category = Item.objects.filter(itemCategory=ItemCategory.objects.get(id=context['output_category']))
-            context['result'] = str(context['input_value']) + " " + context['input_unit']
+            #  determine measurement type
+            measurement_type = _unit_category(form.cleaned_data['input_unit'])
+
+            #  calculate standardized value
+            standardized_value = _convert_to_standardized_value(form.cleaned_data['input_unit'], float(form.cleaned_data['input_value']), measurement_type)
+
+            #  get list of items that are in output category
+            items_in_category = _get_items_in_category(form.cleaned_data['output_category'], measurement_type)
             items_whole_number = []
 
-            if unit_category(context['input_unit']) == "length":
-                #  convert input value to standardized value
-                standardized_value = convert_length_to_cm(context['input_value'], context['input_unit'])
-                context['standardized_value'] = standardized_value
+            #  create list of items where the modulo is zero and the quotient is > 1
+            for item in items_in_category:
+                if _is_modulo_zero(standardized_value, item) and _is_greater_than_one(standardized_value, item):
+                    items_whole_number.append(item)
 
-                #  select items that return a whole number
-                for item in items_in_category:
-                    if round(decimal.Decimal(standardized_value) % item.itemMeasurement, 0) == 0:
-                        items_whole_number.append(item)
-
-                #  check if there are any items that return a whole number
-                if not items_whole_number:
-                    output_unit = random.choice(items_in_category)
-                    context['modulo'] += "no items return whole number"
-                else:
-                    output_unit = random.choice(items_whole_number)
-
-                context['modulo'] += " 1 unit is " + str(round(output_unit.itemMeasurement, 0)) + " and modulo " + str(round(decimal.Decimal(standardized_value) % output_unit.itemMeasurement, 0))
-                output_value = round(decimal.Decimal(standardized_value) / output_unit.itemMeasurement,0)
-                context['result'] += " is equal to " + str(output_value) + " " + output_unit.itemName + "s"
-
-            elif unit_category(context['input_unit']) == "weight":
+            #  return random item
+            #  Preferentially return items where the modulo is zero and the quotient is > 1
+            if not items_whole_number:
                 output_unit = random.choice(items_in_category)
+            else:
+                output_unit = random.choice(items_whole_number)
 
-                standardized_value = convert_weight_to_kg(context['input_value'], context['input_unit'])
-                context['standardized_value'] = standardized_value
-                context['modulo'] += "modulo " + str(round(decimal.Decimal(standardized_value) % output_unit.itemMeasurement, 1))
-                output_value = round(decimal.Decimal(standardized_value) / output_unit.itemMeasurement,1)
-                context['result'] += " is equal to " + str(output_value) + " " + output_unit.itemName + "s"
+            output_value = Decimal(standardized_value) / output_unit.item_measurement
+            print(output_value)
+            if output_value > 1:
+                output_value = round(output_value, 0)
 
+            result = (
+                    str(form.cleaned_data['input_value']) + " " +
+                    form.cleaned_data['input_unit'] + " is equal to "
+                    + str(_humanize_output(output_value)) + " "
+                    + output_unit.item_name + "s ")
+            context['result'] = result
 
     else:
         form = UserEntryForm()
 
     context['form'] = form
-
-    return HttpResponse(template.render(context, request))
-
-
-def home(request):
-    return HttpResponse("You are at the home view")
+    return TemplateResponse(request, 'app/home.html', context)
 
 
-def unit_category(unit):
-    #  can i just test for group name??
-    if unit == "MM" or unit == "CM" or unit == "M" or unit == "KM" or unit == "MI" or unit == "Y" or unit == "FT" or unit == "IN":
-        category = "length"
+def _unit_category(unit):
+
+    for i in WEIGHT_UNITS:
+        if i[0] == unit:
+            return "WE"
+    for i in LENGTH_UNITS:
+        if i[0] == unit:
+            return "LE"
+
+
+def _convert_length_to_m(user_input: float, unit: str) -> float:
+
+    for i in CONVERSION_FACTORS:
+        if unit == i[0]:
+            return user_input * i[1]
+
+
+def _convert_weight_to_g(user_input: float, unit: str) -> float:
+
+    for i in CONVERSION_FACTORS:
+        if unit == i[0]:
+            return user_input * i[1]
+
+
+def _convert_to_standardized_value(input_unit, input_value, unit_category):
+    if unit_category == "LE":
+        return _convert_length_to_m(input_value, input_unit)
     else:
-        # should i explicitly do an if statement for this?
-        category = "weight"
-    return category
+        return _convert_weight_to_g(input_value, input_unit)
 
 
-def convert_length_to_cm(user_input, unit):
-    user_input = int(user_input)
-    match unit:
-        case "CM":
-            return user_input
-        case "MM":
-            return user_input / 10
-        case "M":
-            return user_input * 100
-        case "KM":
-            return user_input * 100000
-        case "MI":
-            return user_input * 160934
-        case "Y":
-            return user_input * 91.44
-        case "FT":
-            return user_input * 30.48
-        case "IN":
-            return user_input * 2.54
+def _get_items_in_category(output_category, measurement_type):
+    qs = (
+        Item.objects.filter(
+            measurement_type=measurement_type)
+    )
 
-
-def convert_weight_to_kg(user_input, unit):
-    user_input = int(user_input)
-    match unit:
-        case "KG":
-            return user_input
-        case "G":
-            return user_input/1000
-        case "MG":
-            return user_input/1000000
-        case "LB":
-            return user_input*0.453592
-        case "OZ":
-            return user_input*0.0283495
-
-
-def item_modulo_zero(output_category, standardized_value):
-    #  TODO: Add if output is > 1
-    items_whole_number = []
-    if output_category == "":
-        items_in_category = Item.objects.all()
-
+    if output_category is None:
+        return qs
     else:
-        items_in_category = Item.objects.filter(itemCategory=ItemCategory.objects.get(id=output_category))
+        return qs.filter(
+            item_category=ItemCategory.objects.get(
+                item_category=output_category))
 
-    for item in items_in_category:
-        if round(decimal.Decimal(standardized_value) % item.itemMeasurement, 1) != 0 and round(decimal.Decimal(standardized_value) / item.itemMeasurement, 1) > 0:
-            items_whole_number.append(item)
 
-    if not items_whole_number:
-        output_unit = random.choice(items_in_category)
-
+def _is_modulo_zero(standardized_value, item):
+    modulo = Decimal(standardized_value) % item.item_measurement
+    if round(modulo, 0) == 0:
+        return True
     else:
-        output_unit = random.choice(items_whole_number)
+        return False
 
-    return output_unit
+
+def _is_greater_than_one(standardized_value, item):
+    if Decimal(standardized_value) / item.item_measurement >= 1:
+        return True
+    else:
+        return False
+
+
+def _humanize_output(output):
+    if output >= 1000000:
+        return humanize.intword(output)
+    elif output >= 1000:
+        return humanize.intcomma(output)
+    elif 1 <= output <= 10:
+        return humanize.apnumber(output)
+    elif output < 1:
+        return humanize.fractional(output)
