@@ -1,6 +1,7 @@
 # Horne Converter
 
 ## Background
+https://horne-converter.fly.dev/
 The Horne Converter allows users to  convert a value from a standard unit of 
 measurement to a silly unit of measurement. This converter was inspired by 
 Alex Horne from the Taskmaster UK TV show. 
@@ -8,7 +9,7 @@ Alex Horne from the Taskmaster UK TV show.
 ## Instructions
 
 ### Install packages
-**Install npm**
+Assumes that node.js and npm are installed
 
 
 - Install front end tooling 
@@ -18,31 +19,41 @@ Alex Horne from the Taskmaster UK TV show.
     ~~~~
 
 - Set up backend
-  - install pip
+1. install pip
+     ~~~~
+     python.exe -m pip install --upgrade pip –user
+     ~~~~
+2. install venv
+     ~~~
+     pip install virtualenv –user
+     ~~~
+3. Create new virtual environment
+     ~~~~
+     python -m virtualenv venv
+     ~~~~
+4. Activate virtual environment
+     ~~~~
+     .\venv\Scripts\activate
+     ~~~~
+5. Install Django
+     ~~~~
+     pip install Django
+     ~~~~
+6. Install Humanize (https://pypi.org/project/humanize/)
+     ~~~~
+     python -m pip install --upgrade humanize
+     ~~~~
+7. Install environs package
     ~~~~
-    python.exe -m pip install --upgrade pip –user
+   python -m pip install django-environ==0.9.0
+   ~~~~
+8. Install psycopg package
     ~~~~
-  - install venv
-    ~~~
-    pip install virtualenv –user
-    ~~~
-  - Create new virtual environment
+    python -m pip install psycopg2==2.9.5
     ~~~~
-    python -m virtualenv venv
+9. Install WhiteNoise package
     ~~~~
-  - Activate virtual environment
-    ~~~~
-    .\venv\Scripts\activate
-    ~~~~
-  - Install Django
-    ~~~~
-    pip install Django
-    ~~~~
-  - 
-  - install packages into venv
-    - Humanize (https://pypi.org/project/humanize/)
-    ~~~~
-    python -m pip install --upgrade humanize
+    python -m pip install whitenoise==6.3.0
     ~~~~
 
 [//]: # (## TODO)
