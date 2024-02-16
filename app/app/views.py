@@ -46,7 +46,7 @@ def index(request):
                 output_value = round(output_value, 0)
 
             result = (
-                    str(_humanize_output(form.cleaned_data['input_value'])) + " " +
+                    str(_humanize_input(form.cleaned_data['input_value'])) + " " +
                     form.cleaned_data['input_unit'] + " is equal to "
                     + str(_humanize_output(output_value)) + " "
                     + output_unit.item_name + "s ")
@@ -134,3 +134,14 @@ def _humanize_output(output):
         return humanize.apnumber(output)
     elif output < 1:
         return humanize.fractional(output)
+    else:
+        return output
+
+
+def _humanize_input(input):
+    if input >= 1000000:
+        return humanize.intword(input)
+    elif input >= 1000:
+        return humanize.intcomma(input)
+    else:
+        return input
