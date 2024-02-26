@@ -9,8 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     concurrency: deploy-group    # optional: ensure only one action runs at a time
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: ls
       - name: Deploy to fly
         working-directory: app
         run: flyctl deploy --remote-only
