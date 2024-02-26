@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: ls
+      - run: echo ${{ secrets.FLY_API_TOKEN }}
       - name: Deploy to fly
         working-directory: app
         run: flyctl deploy --remote-only
